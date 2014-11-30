@@ -6,6 +6,15 @@ The program uses reactive programming techniques that enable event-driven progra
 
 From the Android UI perspective, it uses Navigation Drawer to easily navigate through the app, single Activity for the context and Fragments for particular views. There's also a SettingsManager that serves as a global context beyond Application context. The app supports both smartphones and tablets, portrait and landscape.
 
+## FEATURES
+
+The app for the moment enables you to search the questions on Stack Overflow website, and loads the comments and answers for the questions. It's just to show how the API works and how it could be implemented with rx-java.
+
+## MISSING FEATURES
+
+- no loader support, it only loads the first 30 questions
+- no saving
+
 ## DEPENDENCIES
 
 - AdvancedAndroidLogger - for advanced logging to logcat
