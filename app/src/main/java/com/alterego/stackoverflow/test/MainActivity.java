@@ -1,6 +1,5 @@
 package com.alterego.stackoverflow.test;
 
-import com.alterego.flickr.app.test.R;
 import com.alterego.stackoverflow.test.navigation.NavigationDrawerFragment;
 import com.alterego.stackoverflow.test.search.SearchFragment;
 
@@ -14,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import solutions.alterego.stackoverflow.test.R;
 
 public class MainActivity extends AppCompatActivity
     implements NavigationDrawerFragment.NavigationDrawerCallbacks, OnFragmentInteractionListener, FragmentManager.OnBackStackChangedListener {

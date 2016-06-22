@@ -2,10 +2,9 @@ package com.alterego.stackoverflow.test.search;
 
 import com.google.gson.Gson;
 
-import com.alterego.flickr.app.test.R;
+import com.alterego.stackoverflow.test.Logger;
 import com.alterego.stackoverflow.test.MainApplication;
 import com.alterego.stackoverflow.test.OnFragmentInteractionListener;
-import com.alterego.stackoverflow.test.Logger;
 import com.alterego.stackoverflow.test.api.StackOverflowApiManager;
 import com.alterego.stackoverflow.test.data.SearchResponse;
 
@@ -30,6 +29,7 @@ import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import solutions.alterego.stackoverflow.test.R;
 
 
 public class SearchFragment extends Fragment {
