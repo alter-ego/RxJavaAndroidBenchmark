@@ -19,8 +19,8 @@ import com.alterego.flickr.app.test.R;
 import com.alterego.stackoverflow.test.SettingsManager;
 import com.alterego.stackoverflow.test.data.SearchResponse;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -37,13 +37,13 @@ public class SearchFragment extends Fragment {
     private Subscription mSearchSubscription;
     private SettingsManager mSettingsManager;
 
-    @InjectView(R.id.search_edit_text)
+    @BindView(R.id.search_edit_text)
     EditText mEditText;
-    @InjectView(R.id.search_button)
+    @BindView(R.id.search_button)
     Button mSearchButton;
-    @InjectView(R.id.progress_bar)
+    @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
-    @InjectView(R.id.search_text_noresults)
+    @BindView(R.id.search_text_noresults)
     TextView mNoResultsText;
 
     public SearchFragment() {
@@ -67,7 +67,7 @@ public class SearchFragment extends Fragment {
         mSettingsManager.getLogger().info("SearchFragment onCreateView");
 
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         if (mLastSearch != null)
             mEditText.setText(mLastSearch);
