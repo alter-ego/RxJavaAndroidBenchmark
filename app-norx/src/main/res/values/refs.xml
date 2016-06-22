@@ -1,0 +1,5 @@
+<resources>
+
+    <item name="fragment_questions" type="layout">@layout/fragment_questions_list</item>
+
+</resources>
