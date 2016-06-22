@@ -44,7 +44,7 @@
             android:layout_width="@dimen/navigation_drawer_width"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:name="com.alterego.stackoverflow.test.navigation.NavigationDrawerFragment"
+            android:name="com.alterego.stackoverflow.norx.test.navigation.NavigationDrawerFragment"
             tools:layout="@layout/fragment_navigation_drawer" />
     <!--</LinearLayout>-->
 
