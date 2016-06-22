@@ -18,8 +18,8 @@ import org.joda.time.DateTimeZone;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.*;
+
 
 public class CommentsListAdapter extends ArrayAdapter<Question> {
 
@@ -33,15 +33,15 @@ public class CommentsListAdapter extends ArrayAdapter<Question> {
     }
 
     static class ViewHolder {
-        @InjectView(R.id.AnswerBody)
+        @BindView(R.id.AnswerBody)
         TextView commentBody;
-        @InjectView(R.id.AuthorName)
+        @BindView(R.id.AuthorName)
         TextView authorName;
-        @InjectView(R.id.CreationDate)
+        @BindView(R.id.CreationDate)
         TextView creationDate;
 
         public ViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
     }
 

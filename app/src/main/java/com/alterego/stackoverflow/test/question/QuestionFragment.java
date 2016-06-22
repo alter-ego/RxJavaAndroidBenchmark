@@ -19,8 +19,8 @@ import com.alterego.stackoverflow.test.data.Question;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class QuestionFragment extends Fragment {
 
@@ -30,13 +30,13 @@ public class QuestionFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Question mQuestion;
 
-    @InjectView(R.id.AnswerBody)
+    @BindView(R.id.AnswerBody)
     TextView mQuestionTitle;
-    @InjectView(R.id.QuestionContent)
+    @BindView(R.id.QuestionContent)
     WebView mQuestionContent;
-    @InjectView(R.id.ShowComments)
+    @BindView(R.id.ShowComments)
     Button mShowComments;
-    @InjectView(R.id.ShowAnswers)
+    @BindView(R.id.ShowAnswers)
     Button mShowAnswers;
 
 
@@ -68,7 +68,7 @@ public class QuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_question, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         mQuestionTitle.setText(Html.fromHtml(mQuestion.getTitle()));
         mQuestionContent.loadData(mQuestion.getBody(), "text/html", "UTF-8");
         if (mQuestion.isAnswered()) {

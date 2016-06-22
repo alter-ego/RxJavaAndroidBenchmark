@@ -1,7 +1,7 @@
 <resources>
 
     <style name="AppTheme" parent="AppTheme.Base"/>
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/stackoverflow_darker</item>
         <item name="colorPrimaryDark">@color/stackoverflow_darkest</item>
         <item name="colorAccent">@color/stackoverflow_lighter</item>
