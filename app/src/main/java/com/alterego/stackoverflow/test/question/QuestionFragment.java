@@ -1,5 +1,11 @@
 package com.alterego.stackoverflow.test.question;
 
+import com.alterego.flickr.app.test.R;
+import com.alterego.stackoverflow.test.MainApplication;
+import com.alterego.stackoverflow.test.OnFragmentInteractionListener;
+import com.alterego.stackoverflow.test.Logger;
+import com.alterego.stackoverflow.test.data.Question;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,13 +17,9 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.alterego.flickr.app.test.R;
-import com.alterego.stackoverflow.test.MainApplication;
-import com.alterego.stackoverflow.test.OnFragmentInteractionListener;
-import com.alterego.stackoverflow.test.SettingsManager;
-import com.alterego.stackoverflow.test.data.Question;
-
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,16 +28,22 @@ public class QuestionFragment extends Fragment {
 
     private static final String QUESTION = "question";
 
-    private SettingsManager mSettingsManager;
+    @Inject
+    Logger logger;
+
     private OnFragmentInteractionListener mListener;
+
     private Question mQuestion;
 
     @BindView(R.id.AnswerBody)
     TextView mQuestionTitle;
+
     @BindView(R.id.QuestionContent)
     WebView mQuestionContent;
+
     @BindView(R.id.ShowComments)
     Button mShowComments;
+
     @BindView(R.id.ShowAnswers)
     Button mShowAnswers;
 
@@ -48,25 +56,21 @@ public class QuestionFragment extends Fragment {
         return fragment;
     }
 
-    public QuestionFragment() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainApplication.component().inject(this);
 
-        mSettingsManager = MainApplication.getMainApplication().getSettingsManager();
-        mSettingsManager.getLogger().info("QuestionFragment onCreate");
+        logger.getInstance().info("QuestionFragment onCreate");
 
         if (getArguments() != null) {
             mQuestion = getArguments().getParcelable(QUESTION);
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+        Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_question, container, false);
         ButterKnife.bind(this, view);
         mQuestionTitle.setText(Html.fromHtml(mQuestion.getTitle()));
@@ -110,7 +114,7 @@ public class QuestionFragment extends Fragment {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                + " must implement OnFragmentInteractionListener");
         }
     }
 
