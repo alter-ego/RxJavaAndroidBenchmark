@@ -1,6 +1,15 @@
 package com.alterego.stackoverflow.test.search;
 
-import android.app.Activity;
+import com.google.gson.Gson;
+
+import com.alterego.flickr.app.test.R;
+import com.alterego.stackoverflow.test.MainApplication;
+import com.alterego.stackoverflow.test.OnFragmentInteractionListener;
+import com.alterego.stackoverflow.test.Logger;
+import com.alterego.stackoverflow.test.api.StackOverflowApiManager;
+import com.alterego.stackoverflow.test.data.SearchResponse;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -13,11 +22,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.alterego.stackoverflow.test.MainApplication;
-import com.alterego.stackoverflow.test.OnFragmentInteractionListener;
-import com.alterego.flickr.app.test.R;
-import com.alterego.stackoverflow.test.SettingsManager;
-import com.alterego.stackoverflow.test.data.SearchResponse;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,21 +35,35 @@ import rx.schedulers.Schedulers;
 public class SearchFragment extends Fragment {
 
     private static final String FRAGMENT_TITLE = "Search";
+
     private static final String LAST_SEARCH = "last_search";
 
     private String mLastSearch;
+
     private OnFragmentInteractionListener mListener;
-    private Subscription mSearchSubscription;
-    private SettingsManager mSettingsManager;
+
+    private Subscription searchSubscription;
 
     @BindView(R.id.search_edit_text)
     EditText mEditText;
+
     @BindView(R.id.search_button)
     Button mSearchButton;
+
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
+
     @BindView(R.id.search_text_noresults)
     TextView mNoResultsText;
+
+    @Inject
+    StackOverflowApiManager stackOverflowApiManager;
+
+    @Inject
+    Logger logger;
+
+    @Inject
+    Gson gson;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -53,30 +72,27 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainApplication.component().inject(this);
+
         if (savedInstanceState != null) {
             mLastSearch = savedInstanceState.getString(LAST_SEARCH);
         }
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        mSettingsManager = MainApplication.getMainApplication().getSettingsManager();
-        mSettingsManager.getLogger().info("SearchFragment onCreateView");
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, view);
 
-        if (mLastSearch != null)
+        if (mLastSearch != null) {
             mEditText.setText(mLastSearch);
+        }
 
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
                 int result = actionId & EditorInfo.IME_MASK_ACTION;
-                switch(result) {
+                switch (result) {
                     case EditorInfo.IME_ACTION_DONE:
                         performSearch();
                         break;
@@ -99,27 +115,27 @@ public class SearchFragment extends Fragment {
         mProgressBar.setVisibility(View.VISIBLE);
         mNoResultsText.setVisibility(View.INVISIBLE);
         mSearchButton.setEnabled(false);
-        if (mSearchSubscription != null && !mSearchSubscription.isUnsubscribed())
-            mSearchSubscription.unsubscribe();
+        if (searchSubscription != null && !searchSubscription.isUnsubscribed()) {
+            searchSubscription.unsubscribe();
+        }
 
         String searchtext = mEditText.getText().toString();
-        mSettingsManager.getLogger().info("SearchFragment searching for = " + searchtext);
-        mSearchSubscription = mSettingsManager.getStackOverflowApiManager()
-                .doSearchForTitle(searchtext)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(questionSearchObserver);
+        searchSubscription = stackOverflowApiManager
+            .doSearchForTitle(searchtext)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(questionSearchObserver);
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         try {
             mListener = (OnFragmentInteractionListener) activity;
             mListener.setActionBarTitle(FRAGMENT_TITLE);
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -135,11 +151,13 @@ public class SearchFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         String searchtext = "";
         super.onSaveInstanceState(outState);
-        if (mEditText!=null)
+        if (mEditText != null) {
             searchtext = mEditText.getText().toString();
+        }
 
-        if (searchtext != null && !searchtext.equals(""))
+        if (searchtext != null && !searchtext.equals("")) {
             outState.putString(LAST_SEARCH, searchtext);
+        }
     }
 
     @Override
@@ -151,20 +169,20 @@ public class SearchFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mSearchSubscription != null) {
-            mSearchSubscription.unsubscribe();
+        if (searchSubscription != null) {
+            searchSubscription.unsubscribe();
         }
     }
 
     private Observer<SearchResponse> questionSearchObserver = new Observer<SearchResponse>() {
         @Override
         public void onCompleted() {
-            mSettingsManager.getLogger().info("SearchFragment questionSearchObserver finished with search");
+            logger.getInstance().info("SearchFragment questionSearchObserver finished with search");
         }
 
         @Override
         public void onError(java.lang.Throwable throwable) {
-            mSettingsManager.getLogger().error("SearchFragment questionSearchObserver error receiving search results = " + throwable.toString());
+            logger.getInstance().error("SearchFragment questionSearchObserver error receiving search results = " + throwable.toString());
             mProgressBar.setVisibility(View.GONE);
             mNoResultsText.setVisibility(View.VISIBLE);
             mNoResultsText.setText(getString(R.string.search_error));
@@ -173,11 +191,11 @@ public class SearchFragment extends Fragment {
 
         @Override
         public void onNext(SearchResponse searchResponse) {
-            mSettingsManager.getLogger().info("SearchFragment questionSearchObserver search results = " + searchResponse.toString());
+            logger.getInstance().info("SearchFragment questionSearchObserver search results = " + searchResponse.toString());
             mProgressBar.setVisibility(View.GONE);
             mSearchButton.setEnabled(true);
 
-            String json_string = mSettingsManager.getGson().toJson(searchResponse);
+            String json_string = gson.toJson(searchResponse);
             String searchtext = mEditText.getText().toString();
 
             if (searchResponse.getQuestions() != null && searchResponse.getQuestions().size() > 0) {
@@ -190,6 +208,4 @@ public class SearchFragment extends Fragment {
             }
         }
     };
-
-
 }
