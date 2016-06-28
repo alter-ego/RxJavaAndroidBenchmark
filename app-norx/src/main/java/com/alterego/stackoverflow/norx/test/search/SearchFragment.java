@@ -1,5 +1,6 @@
 package com.alterego.stackoverflow.norx.test.search;
 
+import com.alterego.stackoverflow.norx.test.data.Question;
 import com.google.gson.Gson;
 
 import com.alterego.stackoverflow.norx.test.Logger;
@@ -20,6 +21,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -42,7 +46,7 @@ public class SearchFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private Subscription searchSubscription;
+    //private Subscription searchSubscription;
 
     @BindView(R.id.search_edit_text)
     EditText mEditText;
@@ -115,16 +119,20 @@ public class SearchFragment extends Fragment {
         mProgressBar.setVisibility(View.VISIBLE);
         mNoResultsText.setVisibility(View.INVISIBLE);
         mSearchButton.setEnabled(false);
-        if (searchSubscription != null && !searchSubscription.isUnsubscribed()) {
-            searchSubscription.unsubscribe();
-        }
+        //if (searchSubscription != null && !searchSubscription.isUnsubscribed()) {
+        //    searchSubscription.unsubscribe();
+        //}
 
         String searchtext = mEditText.getText().toString();
-        searchSubscription = stackOverflowApiManager
-            .doSearchForTitle(searchtext)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(questionSearchObserver);
+
+        //TODO Fix with no rx
+        //searchSubscription = stackOverflowApiManager
+        //.doSearchForTitle(searchtext)
+        //.observeOn(AndroidSchedulers.mainThread())
+        //.subscribeOn(Schedulers.io())
+        //.subscribe(questionSearchObserver);
+        questionSearch(stackOverflowApiManager.doSearchForTitle(searchtext));
+        //ArrayList<SearchResponse> searchSubscription = stackOverflowApiManager.doSearchForTitle(searchtext);
     }
 
     @Override
@@ -135,7 +143,7 @@ public class SearchFragment extends Fragment {
             mListener.setActionBarTitle(FRAGMENT_TITLE);
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -169,12 +177,35 @@ public class SearchFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (searchSubscription != null) {
-            searchSubscription.unsubscribe();
+        //if (searchSubscription != null) {
+        //    searchSubscription.unsubscribe();
+        //}
+    }
+
+    private void questionSearch(SearchResponse searchResponse) {
+
+        mProgressBar.setVisibility(View.GONE);
+        mSearchButton.setEnabled(true);
+        logger.getInstance().info("SearchFragment questionSearchObserver search results = " + searchResponse.toString());
+
+
+        String json_string = gson.toJson(searchResponse);
+        String searchtext = mEditText.getText().toString();
+
+        if (searchResponse.getQuestions() != null && searchResponse.getQuestions().size() > 0) {
+            if (mListener != null) {
+                Fragment fragment_to_open = QuestionsFragment.newInstance(json_string);
+                mListener.onRequestOpenFragment(fragment_to_open, "Results: " + searchtext);
+            }
+        } else {
+            mNoResultsText.setVisibility(View.VISIBLE);
         }
     }
 
-    private Observer<SearchResponse> questionSearchObserver = new Observer<SearchResponse>() {
+}
+
+    //TODO Replace with no rx version
+    /*private Observer<SearchResponse> questionSearchObserver = new Observer<SearchResponse>() {
         @Override
         public void onCompleted() {
             logger.getInstance().info("SearchFragment questionSearchObserver finished with search");
@@ -207,5 +238,4 @@ public class SearchFragment extends Fragment {
                 mNoResultsText.setVisibility(View.VISIBLE);
             }
         }
-    };
-}
+    };*/

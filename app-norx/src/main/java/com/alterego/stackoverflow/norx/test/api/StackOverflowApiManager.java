@@ -1,10 +1,13 @@
 package com.alterego.stackoverflow.norx.test.api;
 
+import com.alterego.stackoverflow.norx.test.data.Question;
 import com.google.gson.Gson;
 
 import com.alterego.stackoverflow.norx.test.data.SearchResponse;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -42,8 +45,13 @@ public class StackOverflowApiManager {
         service = restAdapter.create(IStackOverflowApi.class);
     }
 
-    public Observable<SearchResponse> doSearchForTitle(String title) {
-        return service.getSearchResults(title);
+    //public Observable<SearchResponse> doSearchForTitle(String title) {
+    //    return service.getSearchResults(title);
+    //}
+
+    public SearchResponse doSearchForTitle(String title){
+        SearchResponse sr = service.getSearchResults(title);
+        return sr;
     }
 
     private OkHttpClient getOkHttpClient(File baseDir) {
