@@ -1,11 +1,12 @@
 package com.alterego.stackoverflow.norx.test.api;
 
 import com.alterego.stackoverflow.norx.test.data.SearchResponse;
+
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import rx.Observable;
 
 /**
  * This is the API for StackOverflow.
@@ -22,5 +23,5 @@ public interface IStackOverflowApi {
     //@GET("search?order=desc&sort=activity&site=stackoverflow&filter=!3yXvh9)gd0IKKXn31")
     //Observable<SearchResponse> getSearchResults(@Query("intitle") String titleSearchTerms);
     @GET("search?order=desc&sort=activity&site=stackoverflow&filter=!3yXvh9)gd0IKKXn31")
-    SearchResponse getSearchResults(@Query("intitle") String titleSearchTerms);
+    Call<SearchResponse> getSearchResults(@Query("intitle") String titleSearchTerms);
 }

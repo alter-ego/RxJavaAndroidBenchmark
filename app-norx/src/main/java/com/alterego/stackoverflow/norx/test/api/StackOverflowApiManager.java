@@ -1,13 +1,10 @@
 package com.alterego.stackoverflow.norx.test.api;
 
-import com.alterego.stackoverflow.norx.test.data.Question;
 import com.google.gson.Gson;
 
 import com.alterego.stackoverflow.norx.test.data.SearchResponse;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -17,11 +14,9 @@ import javax.inject.Singleton;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.schedulers.Schedulers;
 
 @Singleton
 public class StackOverflowApiManager {
@@ -38,7 +33,7 @@ public class StackOverflowApiManager {
         Retrofit restAdapter = new Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl(baseUrl)
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+            //.addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
             .client(getOkHttpClient(cacheDir))
             .build();
 
@@ -49,8 +44,8 @@ public class StackOverflowApiManager {
     //    return service.getSearchResults(title);
     //}
 
-    public SearchResponse doSearchForTitle(String title){
-        SearchResponse sr = service.getSearchResults(title);
+    public Call<SearchResponse> doSearchForTitle(String title){
+        Call<SearchResponse> sr = service.getSearchResults(title);
         return sr;
     }
 

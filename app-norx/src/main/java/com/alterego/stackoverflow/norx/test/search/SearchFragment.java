@@ -12,6 +12,7 @@ import com.alterego.stackoverflow.norx.test.data.SearchResponse;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -132,7 +136,6 @@ public class SearchFragment extends Fragment {
         //.subscribeOn(Schedulers.io())
         //.subscribe(questionSearchObserver);
         questionSearch(stackOverflowApiManager.doSearchForTitle(searchtext));
-        //ArrayList<SearchResponse> searchSubscription = stackOverflowApiManager.doSearchForTitle(searchtext);
     }
 
     @Override
@@ -182,24 +185,39 @@ public class SearchFragment extends Fragment {
         //}
     }
 
-    private void questionSearch(SearchResponse searchResponse) {
+    private void questionSearch(final Call<SearchResponse> searchResponse) {
 
-        mProgressBar.setVisibility(View.GONE);
-        mSearchButton.setEnabled(true);
-        logger.getInstance().info("SearchFragment questionSearchObserver search results = " + searchResponse.toString());
+        searchResponse.enqueue(new Callback<SearchResponse>(){
 
+            @Override
+            public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
+                logger.getInstance().info("SearchFragment questionSearchObserver search results = " + response.toString());
+                mProgressBar.setVisibility(View.GONE);
+                mSearchButton.setEnabled(true);
 
-        String json_string = gson.toJson(searchResponse);
-        String searchtext = mEditText.getText().toString();
+                String json_string = gson.toJson(response.body());
+                //Log.e("JSON FILE",json_string);
+                String searchtext = mEditText.getText().toString();
 
-        if (searchResponse.getQuestions() != null && searchResponse.getQuestions().size() > 0) {
-            if (mListener != null) {
-                Fragment fragment_to_open = QuestionsFragment.newInstance(json_string);
-                mListener.onRequestOpenFragment(fragment_to_open, "Results: " + searchtext);
+                if (response.body().getQuestions() != null && response.body().getQuestions().size() > 0) {
+                    if (mListener != null) {
+                        Fragment fragment_to_open = QuestionsFragment.newInstance(json_string);
+                        mListener.onRequestOpenFragment(fragment_to_open, "Results: " + searchtext);
+                    }
+                } else {
+                    mNoResultsText.setVisibility(View.VISIBLE);
+                }
             }
-        } else {
-            mNoResultsText.setVisibility(View.VISIBLE);
-        }
+
+            @Override
+            public void onFailure(Call<SearchResponse> call, Throwable t) {
+                logger.getInstance().error("SearchFragment error receiving search results = " + t.toString());
+                mProgressBar.setVisibility(View.GONE);
+                mNoResultsText.setVisibility(View.VISIBLE);
+                mNoResultsText.setText(getString(R.string.search_error));
+                mSearchButton.setEnabled(true);
+            }
+        });
     }
 
 }
