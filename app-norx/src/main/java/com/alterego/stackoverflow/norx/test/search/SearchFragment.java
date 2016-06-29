@@ -52,6 +52,8 @@ public class SearchFragment extends Fragment {
 
     //private Subscription searchSubscription;
 
+    double startTime;
+
     @BindView(R.id.search_edit_text)
     EditText mEditText;
 
@@ -81,6 +83,9 @@ public class SearchFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MainApplication.component().inject(this);
+
+        startTime = System.currentTimeMillis();
+        logger.getInstance().error("Start time in SearchFragment onCreate: ", String.valueOf(startTime));
 
         if (savedInstanceState != null) {
             mLastSearch = savedInstanceState.getString(LAST_SEARCH);
@@ -136,6 +141,8 @@ public class SearchFragment extends Fragment {
         //.subscribeOn(Schedulers.io())
         //.subscribe(questionSearchObserver);
         questionSearch(stackOverflowApiManager.doSearchForTitle(searchtext));
+        double performSearchTime = (System.currentTimeMillis() - startTime) / 1000;
+        logger.getInstance().error("Timing in performSearch(): ", String.valueOf(performSearchTime));
     }
 
     @Override
@@ -207,6 +214,9 @@ public class SearchFragment extends Fragment {
                 } else {
                     mNoResultsText.setVisibility(View.VISIBLE);
                 }
+
+                double questionSearchTime = (System.currentTimeMillis() - startTime)/1000;
+                logger.getInstance().error("Timing in questionSearch() onResponse: ", String.valueOf(questionSearchTime));
             }
 
             @Override
@@ -216,6 +226,8 @@ public class SearchFragment extends Fragment {
                 mNoResultsText.setVisibility(View.VISIBLE);
                 mNoResultsText.setText(getString(R.string.search_error));
                 mSearchButton.setEnabled(true);
+                double questionSearchFailureTime = (System.currentTimeMillis() - startTime)/1000;
+                logger.getInstance().error("Timing in questionSearch() onFailure: ", String.valueOf(questionSearchFailureTime));
             }
         });
     }
