@@ -1,6 +1,5 @@
 package com.alterego.stackoverflow.norx.test.search;
 
-import com.alterego.stackoverflow.norx.test.data.Question;
 import com.google.gson.Gson;
 
 import com.alterego.stackoverflow.norx.test.Logger;
@@ -12,7 +11,6 @@ import com.alterego.stackoverflow.norx.test.data.SearchResponse;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +21,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -33,10 +28,6 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import solutions.alterego.stackoverflow.norx.test.R;
 
@@ -49,8 +40,6 @@ public class SearchFragment extends Fragment {
     private String mLastSearch;
 
     private OnFragmentInteractionListener mListener;
-
-    //private Subscription searchSubscription;
 
     double startTime;
 
@@ -128,18 +117,9 @@ public class SearchFragment extends Fragment {
         mProgressBar.setVisibility(View.VISIBLE);
         mNoResultsText.setVisibility(View.INVISIBLE);
         mSearchButton.setEnabled(false);
-        //if (searchSubscription != null && !searchSubscription.isUnsubscribed()) {
-        //    searchSubscription.unsubscribe();
-        //}
 
         String searchtext = mEditText.getText().toString();
 
-        //TODO Fix with no rx
-        //searchSubscription = stackOverflowApiManager
-        //.doSearchForTitle(searchtext)
-        //.observeOn(AndroidSchedulers.mainThread())
-        //.subscribeOn(Schedulers.io())
-        //.subscribe(questionSearchObserver);
         questionSearch(stackOverflowApiManager.doSearchForTitle(searchtext));
         double performSearchTime = (System.currentTimeMillis() - startTime) / 1000;
         logger.getInstance().error("Timing in performSearch(): ", String.valueOf(performSearchTime));
@@ -187,9 +167,6 @@ public class SearchFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //if (searchSubscription != null) {
-        //    searchSubscription.unsubscribe();
-        //}
     }
 
     private void questionSearch(final Call<SearchResponse> searchResponse) {
@@ -203,7 +180,6 @@ public class SearchFragment extends Fragment {
                 mSearchButton.setEnabled(true);
 
                 String json_string = gson.toJson(response.body());
-                //Log.e("JSON FILE",json_string);
                 String searchtext = mEditText.getText().toString();
 
                 if (response.body().getQuestions() != null && response.body().getQuestions().size() > 0) {
@@ -233,39 +209,3 @@ public class SearchFragment extends Fragment {
     }
 
 }
-
-    //TODO Replace with no rx version
-    /*private Observer<SearchResponse> questionSearchObserver = new Observer<SearchResponse>() {
-        @Override
-        public void onCompleted() {
-            logger.getInstance().info("SearchFragment questionSearchObserver finished with search");
-        }
-
-        @Override
-        public void onError(Throwable throwable) {
-            logger.getInstance().error("SearchFragment questionSearchObserver error receiving search results = " + throwable.toString());
-            mProgressBar.setVisibility(View.GONE);
-            mNoResultsText.setVisibility(View.VISIBLE);
-            mNoResultsText.setText(getString(R.string.search_error));
-            mSearchButton.setEnabled(true);
-        }
-
-        @Override
-        public void onNext(SearchResponse searchResponse) {
-            logger.getInstance().info("SearchFragment questionSearchObserver search results = " + searchResponse.toString());
-            mProgressBar.setVisibility(View.GONE);
-            mSearchButton.setEnabled(true);
-
-            String json_string = gson.toJson(searchResponse);
-            String searchtext = mEditText.getText().toString();
-
-            if (searchResponse.getQuestions() != null && searchResponse.getQuestions().size() > 0) {
-                if (mListener != null) {
-                    Fragment fragment_to_open = QuestionsFragment.newInstance(json_string);
-                    mListener.onRequestOpenFragment(fragment_to_open, "Results: " + searchtext);
-                }
-            } else {
-                mNoResultsText.setVisibility(View.VISIBLE);
-            }
-        }
-    };*/
