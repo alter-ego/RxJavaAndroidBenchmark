@@ -66,4 +66,8 @@ dependencies {
     compile 'joda-time:joda-time:2.4'
     compile 'com.google.code.gson:gson:2.4'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
 }

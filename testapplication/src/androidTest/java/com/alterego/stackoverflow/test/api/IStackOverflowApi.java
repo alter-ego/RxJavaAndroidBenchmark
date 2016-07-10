@@ -5,6 +5,7 @@ import com.alterego.stackoverflow.test.data.SearchResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import rx.Observable;
 
 /**
  * This is the API for StackOverflow.
@@ -18,5 +19,8 @@ public interface IStackOverflowApi {
      * @return {@link SearchResponse} result as an {@link retrofit2.Call}
      */
     @GET("search?order=desc&sort=activity&site=stackoverflow")
-    Call<SearchResponse> getSearchResults(@Query("intitle") String titleSearchTerms, @Query("tagged") String stringDelimitedTags);
+    Call<SearchResponse> getSearchResultsNormal(@Query("intitle") String titleSearchTerms, @Query("tagged") String stringDelimitedTags);
+
+    @GET("search?order=desc&sort=activity&site=stackoverflow")
+    Observable<SearchResponse> getSearchResultsReactive(@Query("intitle") String titleSearchTerms, @Query("tagged") String stringDelimitedTags);
 }
