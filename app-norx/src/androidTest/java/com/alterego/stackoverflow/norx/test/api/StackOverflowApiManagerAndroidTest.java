@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 
 import com.alterego.stackoverflow.norx.test.TestMainApplication;
 import com.alterego.stackoverflow.norx.test.data.SearchResponse;
-import com.alterego.stackoverflow.norx.test.di.TestComponent;
+import com.alterego.stackoverflow.norx.test.di.AndroidTestComponent;
 import com.alterego.stackoverflow.norx.test.helpers.RawJsonMockResponse;
 
 import org.fest.assertions.api.Assertions;
@@ -26,7 +26,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 @RunWith(AndroidJUnit4.class)
-public class StackOverflowApiManagerTest {
+public class StackOverflowApiManagerAndroidTest {
 
     @Inject
     Gson gson;
@@ -43,7 +43,7 @@ public class StackOverflowApiManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        ((TestComponent) TestMainApplication.getComponent()).inject(this);
+        ((AndroidTestComponent) TestMainApplication.getComponent()).inject(this);
         server = new MockWebServer();
         server.start();
         String serverBaseUrl = server.url("/").toString();

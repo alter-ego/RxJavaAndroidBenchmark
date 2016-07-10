@@ -1,7 +1,7 @@
 package com.alterego.stackoverflow.norx.test;
 
+import com.alterego.stackoverflow.norx.test.di.AndroidTestComponent;
 import com.alterego.stackoverflow.norx.test.di.AppComponent;
-import com.alterego.stackoverflow.norx.test.di.TestComponent;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public class TestMainApplication extends MainApplication {
     }
 
     public AppComponent buildComponentAndInject() {
-        return TestComponent.Initializer.init(this);
+        return AndroidTestComponent.Initializer.init(this);
     }
 
 }
