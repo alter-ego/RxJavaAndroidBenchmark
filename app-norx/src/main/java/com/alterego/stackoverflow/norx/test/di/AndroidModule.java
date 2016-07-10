@@ -6,12 +6,12 @@ import com.google.gson.GsonBuilder;
 import com.alterego.advancedandroidlogger.implementations.DetailedAndroidLogger;
 import com.alterego.advancedandroidlogger.interfaces.IAndroidLogger;
 import com.alterego.stackoverflow.norx.test.Logger;
-import com.alterego.stackoverflow.norx.test.MainApplication;
 import com.alterego.stackoverflow.norx.test.helpers.DateTimeSerializer;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 
+import android.app.Application;
 import android.content.Context;
 
 import java.io.File;
@@ -26,11 +26,11 @@ import solutions.alterego.stackoverflow.norx.test.R;
 @Module
 public class AndroidModule {
 
-    private final MainApplication application;
+    private final Application application;
 
     private static final String LOGGING_TAG = "StackOverflowTest";
 
-    public AndroidModule(MainApplication application) {
+    public AndroidModule(Application application) {
         this.application = application;
     }
 
