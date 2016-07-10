@@ -6,6 +6,9 @@ import com.alterego.stackoverflow.norx.test.TestMainApplication;
 import com.alterego.stackoverflow.norx.test.data.SearchResponse;
 import com.alterego.stackoverflow.norx.test.di.AndroidTestComponent;
 import com.alterego.stackoverflow.norx.test.helpers.RawJsonMockResponse;
+import com.alterego.stackoverflow.norx.test.rules.Repeat;
+import com.alterego.stackoverflow.norx.test.rules.RepeatRule;
+import com.tspoon.benchit.Benchit;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.After;
@@ -37,6 +40,9 @@ public class StackOverflowApiManagerAndroidTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
+    @Rule
+    public RepeatRule repeatRule = new RepeatRule();
+
     private StackOverflowApiManager mStackOverflowApiManager;
 
     private MockWebServer server;
@@ -53,15 +59,19 @@ public class StackOverflowApiManagerAndroidTest {
     @After
     public void tearDown() throws Exception {
         server.shutdown();
+        Benchit.analyze("simple-search-result-call").log();
     }
 
     @Test
+    @Repeat(times = 100)
     public void apiservice_successfully_gets_mocked_search_result() throws Exception {
         MockResponse successfulCachedSettingsMockResponse = RawJsonMockResponse.fromString(StackOverflowApiResponses.SEARCH_RAW_RESPONSE);
         server.enqueue(successfulCachedSettingsMockResponse);
 
+        Benchit.begin("simple-search-result-call");
         Call<SearchResponse> call = mStackOverflowApiManager.doSearchForTitleAndTags("", "");
         Response<SearchResponse> response = call.execute();
+        Benchit.end("simple-search-result-call");
 
         Assertions.assertThat(server.getRequestCount()).isEqualTo(1);
         Assertions.assertThat(response.raw().request().headers()).isNotNull();
