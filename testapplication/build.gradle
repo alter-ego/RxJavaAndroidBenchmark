@@ -1,0 +1,69 @@
+apply plugin: 'com.android.application'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        // the latest version of the android-apt plugin
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        applicationId "solutions.alterego.testapplication"
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "com.alterego.stackoverflow.test.CustomTestRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    //testing dependencies
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support:support-annotations:23.4.0'
+
+    androidTestCompile 'com.squareup:fest-android:1.0.8@aar'
+    androidTestCompile 'org.easytesting:fest-assert-core:2.0M10'
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestApt 'com.google.dagger:dagger-compiler:2.4'
+    androidTestCompile('com.google.dagger:dagger:2.4')
+
+    androidTestCompile 'com.github.fabioCollini:DaggerMock:0.5'
+    androidTestCompile('com.squareup.okhttp3:mockwebserver:3.2.0') {
+        exclude group: 'com.squareup.okhttp3'
+        exclude group: 'junit'
+    }
+
+    androidTestCompile 'com.github.T-Spoon:Benchit:v1.0.2'
+
+    testCompile 'junit:junit:4.12'
+
+    compile 'org.projectlombok:lombok:1.16.8'
+
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
+
+    compile 'solutions.alterego:advancedandroidlogger:1.0.8@aar'
+    compile 'joda-time:joda-time:2.4'
+    compile 'com.google.code.gson:gson:2.4'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+}
