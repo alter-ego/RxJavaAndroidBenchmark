@@ -67,8 +67,8 @@ dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
     //Dagger Dependency for Injections
-    compile 'com.google.dagger:dagger:2.0.1'
-    apt "com.google.dagger:dagger-compiler:2.0.1"
+    compile 'com.google.dagger:dagger:2.4'
+    apt "com.google.dagger:dagger-compiler:2.4"
 }
 
 
