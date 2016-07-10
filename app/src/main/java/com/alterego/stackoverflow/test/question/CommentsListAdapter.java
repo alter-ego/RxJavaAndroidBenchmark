@@ -1,5 +1,11 @@
 package com.alterego.stackoverflow.test.question;
 
+import com.alterego.stackoverflow.test.data.Comment;
+import com.alterego.stackoverflow.test.data.Question;
+import com.alterego.stackoverflow.test.helpers.DateHelper;
+
+import org.joda.time.DateTimeZone;
+
 import android.app.Activity;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -8,17 +14,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.alterego.flickr.app.test.R;
-import com.alterego.stackoverflow.test.data.Comment;
-import com.alterego.stackoverflow.test.data.Question;
-import com.alterego.stackoverflow.test.helpers.DateHelper;
-
-import org.joda.time.DateTimeZone;
-
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.*;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import solutions.alterego.stackoverflow.test.R;
 
 
 public class CommentsListAdapter extends ArrayAdapter<Question> {

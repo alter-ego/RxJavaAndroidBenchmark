@@ -1,5 +1,11 @@
 package com.alterego.stackoverflow.test.search;
 
+import com.alterego.stackoverflow.test.data.Question;
+import com.alterego.stackoverflow.test.helpers.DateHelper;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.joda.time.DateTimeZone;
+
 import android.app.Activity;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -9,18 +15,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alterego.flickr.app.test.R;
-import com.alterego.stackoverflow.test.data.Question;
-import com.alterego.stackoverflow.test.helpers.DateHelper;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
-import org.joda.time.DateTimeZone;
-
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import solutions.alterego.stackoverflow.test.R;
 
 public class QuestionsListAdapter extends ArrayAdapter<Question> {
 

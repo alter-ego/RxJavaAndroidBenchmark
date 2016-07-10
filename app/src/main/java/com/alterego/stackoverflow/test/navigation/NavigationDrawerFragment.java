@@ -1,6 +1,5 @@
 package com.alterego.stackoverflow.test.navigation;
 
-import com.alterego.flickr.app.test.R;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -20,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import solutions.alterego.stackoverflow.test.R;
 
 
 /**

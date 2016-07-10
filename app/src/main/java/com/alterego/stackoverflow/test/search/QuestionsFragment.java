@@ -2,10 +2,9 @@ package com.alterego.stackoverflow.test.search;
 
 import com.google.gson.Gson;
 
-import com.alterego.flickr.app.test.R;
+import com.alterego.stackoverflow.test.Logger;
 import com.alterego.stackoverflow.test.MainApplication;
 import com.alterego.stackoverflow.test.OnFragmentInteractionListener;
-import com.alterego.stackoverflow.test.Logger;
 import com.alterego.stackoverflow.test.data.Question;
 import com.alterego.stackoverflow.test.data.SearchResponse;
 import com.alterego.stackoverflow.test.question.QuestionFragment;
@@ -23,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import solutions.alterego.stackoverflow.test.R;
 
 public class QuestionsFragment extends Fragment {
 

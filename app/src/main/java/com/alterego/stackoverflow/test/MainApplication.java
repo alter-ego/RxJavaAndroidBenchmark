@@ -1,6 +1,5 @@
 package com.alterego.stackoverflow.test;
 
-import com.alterego.flickr.app.test.R;
 import com.alterego.stackoverflow.test.di.AndroidModule;
 import com.alterego.stackoverflow.test.di.AppComponent;
 import com.alterego.stackoverflow.test.di.DaggerAppComponent;
@@ -12,6 +11,7 @@ import android.app.Application;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import solutions.alterego.stackoverflow.test.R;
 
 @Accessors(prefix = "m")
 public class MainApplication extends Application {

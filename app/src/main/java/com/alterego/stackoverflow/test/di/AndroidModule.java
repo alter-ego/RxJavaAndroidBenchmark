@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 
 import com.alterego.advancedandroidlogger.implementations.DetailedAndroidLogger;
 import com.alterego.advancedandroidlogger.interfaces.IAndroidLogger;
-import com.alterego.flickr.app.test.R;
 import com.alterego.stackoverflow.test.Logger;
 import com.alterego.stackoverflow.test.MainApplication;
 import com.alterego.stackoverflow.test.helpers.DateTimeSerializer;
@@ -22,6 +21,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import solutions.alterego.stackoverflow.test.R;
 
 @Module
 public class AndroidModule {

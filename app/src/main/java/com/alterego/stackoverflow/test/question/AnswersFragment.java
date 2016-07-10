@@ -1,6 +1,5 @@
 package com.alterego.stackoverflow.test.question;
 
-import com.alterego.flickr.app.test.R;
 import com.alterego.stackoverflow.test.MainApplication;
 import com.alterego.stackoverflow.test.OnFragmentInteractionListener;
 import com.alterego.stackoverflow.test.data.Answer;
@@ -15,6 +14,8 @@ import android.widget.AbsListView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import solutions.alterego.stackoverflow.test.R;
 
 public class AnswersFragment extends Fragment {
 
