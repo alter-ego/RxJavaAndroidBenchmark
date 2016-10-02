@@ -11,6 +11,7 @@ buildscript {
 }
 
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
     compileSdkVersion 23
