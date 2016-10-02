@@ -50,7 +50,7 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.4'
 
-    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'io.reactivex:rxjava:1.2.0'
     compile 'io.reactivex:rxandroid:1.2.1'
 
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
