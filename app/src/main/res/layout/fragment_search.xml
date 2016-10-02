@@ -9,29 +9,11 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/search_edittext_margin">
 
-        <EditText
-            android:id="@+id/search_edit_text"
-            android:layout_centerInParent="true"
-            android:textSize="@dimen/text_edittext_size"
-            android:layout_margin="@dimen/search_edittext_margin"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/search_edit_text"
-            android:layout_centerHorizontal="true"
-            android:textSize="@dimen/text_title_size"
-            android:text="@string/search_fragment_text" />
-
         <Button
             android:id="@+id/search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/search_edit_text"
+            android:layout_centerInParent="true"
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
             android:textSize="@dimen/text_button_size"
@@ -42,8 +24,7 @@
             android:id="@+id/search_text_noresults"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/search_button"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:layout_marginTop="@dimen/search_edittext_margin"
             android:textSize="@dimen/text_button_size"
             android:gravity="center"
@@ -57,7 +38,8 @@
             android:layout_margin="@dimen/search_edittext_margin"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </RelativeLayout>
 

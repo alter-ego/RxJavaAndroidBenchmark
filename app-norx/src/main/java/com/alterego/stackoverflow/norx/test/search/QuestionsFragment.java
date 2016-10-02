@@ -1,12 +1,12 @@
 package com.alterego.stackoverflow.norx.test.search;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import com.alterego.stackoverflow.norx.test.Logger;
 import com.alterego.stackoverflow.norx.test.MainApplication;
 import com.alterego.stackoverflow.norx.test.OnFragmentInteractionListener;
 import com.alterego.stackoverflow.norx.test.data.Question;
-import com.alterego.stackoverflow.norx.test.data.SearchResponse;
 import com.alterego.stackoverflow.norx.test.question.QuestionFragment;
 
 import android.app.Activity;
@@ -40,8 +40,6 @@ public class QuestionsFragment extends Fragment {
 
     private QuestionsListAdapter mAdapter;
 
-    private android.view.ActionMode mActionMode;
-
     @Inject
     Gson gson;
 
@@ -62,8 +60,8 @@ public class QuestionsFragment extends Fragment {
 
         if (getArguments() != null) {
             String searchResultJSON = getArguments().getString(SEARCH_RESULT);
-            SearchResponse searchResultObject = gson.fromJson(searchResultJSON, SearchResponse.class);
-            mQuestions = searchResultObject.getQuestions();
+            mQuestions = gson.fromJson(searchResultJSON, new TypeToken<List<Question>>() {
+            }.getType());
         }
 
         mAdapter = new QuestionsListAdapter(getActivity(), R.layout.fragment_searchresult_listitem, mQuestions);

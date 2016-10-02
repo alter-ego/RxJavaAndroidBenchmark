@@ -1,12 +1,12 @@
 package com.alterego.stackoverflow.test.search;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import com.alterego.stackoverflow.test.Logger;
 import com.alterego.stackoverflow.test.MainApplication;
 import com.alterego.stackoverflow.test.OnFragmentInteractionListener;
 import com.alterego.stackoverflow.test.data.Question;
-import com.alterego.stackoverflow.test.data.SearchResponse;
 import com.alterego.stackoverflow.test.question.QuestionFragment;
 
 import android.app.Activity;
@@ -40,8 +40,6 @@ public class QuestionsFragment extends Fragment {
 
     private QuestionsListAdapter mAdapter;
 
-    private android.view.ActionMode mActionMode;
-
     @Inject
     Gson gson;
 
@@ -62,8 +60,8 @@ public class QuestionsFragment extends Fragment {
 
         if (getArguments() != null) {
             String searchResultJSON = getArguments().getString(SEARCH_RESULT);
-            SearchResponse searchResultObject = gson.fromJson(searchResultJSON, SearchResponse.class);
-            mQuestions = searchResultObject.getQuestions();
+            mQuestions = gson.fromJson(searchResultJSON, new TypeToken<List<Question>>() {
+            }.getType());
         }
 
         mAdapter = new QuestionsListAdapter(getActivity(), R.layout.fragment_searchresult_listitem, mQuestions);
@@ -71,7 +69,7 @@ public class QuestionsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_questions, container, false);
 
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -99,7 +97,7 @@ public class QuestionsFragment extends Fragment {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
