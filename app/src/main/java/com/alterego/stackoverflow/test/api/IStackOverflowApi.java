@@ -17,7 +17,6 @@ public interface IStackOverflowApi {
      * @param titleSearchTerms Search terms
      * @return {@link SearchResponse} result as an {@link rx.Observable}
      */
-    //http://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle=android&site=stackoverflow
     @GET("search?order=desc&sort=activity&site=stackoverflow&filter=!3yXvh9)gd0IKKXn31")
-    Observable<SearchResponse> getSearchResults(@Query("intitle") String titleSearchTerms);
+    Observable<SearchResponse> getSearchResults(@Query("intitle") String titleSearchTerms, @Query("tagged") String stringDelimitedTags);
 }

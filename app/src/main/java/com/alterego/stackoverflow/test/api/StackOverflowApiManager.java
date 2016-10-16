@@ -42,8 +42,8 @@ public class StackOverflowApiManager {
         service = restAdapter.create(IStackOverflowApi.class);
     }
 
-    public Observable<SearchResponse> doSearchForTitle(String title) {
-        return service.getSearchResults(title);
+    public Observable<SearchResponse> doSearchForTitleAndTags(String title, String commaDelimitedTags) {
+        return service.getSearchResults(title, commaDelimitedTags);
     }
 
     private OkHttpClient getOkHttpClient(File baseDir) {

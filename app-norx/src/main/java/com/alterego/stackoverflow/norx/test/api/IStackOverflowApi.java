@@ -17,6 +17,6 @@ public interface IStackOverflowApi {
      * @param titleSearchTerms Search terms
      * @return {@link SearchResponse} result as an {@link retrofit2.Call}
      */
-    @GET("search?order=desc&sort=activity&site=stackoverflow")
+    @GET("search?order=desc&sort=activity&site=stackoverflow&filter=!3yXvh9)gd0IKKXn31")
     Call<SearchResponse> getSearchResults(@Query("intitle") String titleSearchTerms, @Query("tagged") String stringDelimitedTags);
 }
