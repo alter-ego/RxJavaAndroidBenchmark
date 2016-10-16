@@ -33,19 +33,14 @@ public class StackOverflowApiManager {
         Retrofit restAdapter = new Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl(baseUrl)
-            //.addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
             .client(getOkHttpClient(cacheDir))
             .build();
 
         service = restAdapter.create(IStackOverflowApi.class);
     }
 
-    //public Observable<SearchResponse> doSearchForTitle(String title) {
-    //    return service.getSearchResults(title);
-    //}
-
-    public Call<SearchResponse> doSearchForTitle(String title){
-        Call<SearchResponse> sr = service.getSearchResults(title);
+    public Call<SearchResponse> doSearchForTitleAndTags(String title, String commaDelimitedTags){
+        Call<SearchResponse> sr = service.getSearchResults(title, commaDelimitedTags);
         return sr;
     }
 

@@ -101,10 +101,10 @@ public class SearchFragment extends Fragment {
         final long startMillis = System.currentTimeMillis();
 
         searchSubscription = Observable.zip(
-                stackOverflowApiManager.doSearchForTitle(SEARCH_ARGUMENTS.get(0)),
-                stackOverflowApiManager.doSearchForTitle(SEARCH_ARGUMENTS.get(1)),
-                stackOverflowApiManager.doSearchForTitle(SEARCH_ARGUMENTS.get(2)),
-                stackOverflowApiManager.doSearchForTitle(SEARCH_ARGUMENTS.get(3)),
+                stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(0), ""),
+                stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(1), ""),
+                stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(2), ""),
+                stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(3), ""),
                 new Func4<SearchResponse, SearchResponse, SearchResponse, SearchResponse, List<Question>>() {
                     @Override
                     public List<Question> call(SearchResponse searchResponse,

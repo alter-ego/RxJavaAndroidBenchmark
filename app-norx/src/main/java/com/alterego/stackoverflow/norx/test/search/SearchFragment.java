@@ -32,6 +32,7 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.HEAD;
 import solutions.alterego.stackoverflow.norx.test.R;
 
 public class SearchFragment extends Fragment {
@@ -106,10 +107,10 @@ public class SearchFragment extends Fragment {
 
         mLatch = new CountDownLatch(4);
 
-        questionSearch(stackOverflowApiManager.doSearchForTitle(SEARCH_ARGUMENTS.get(0)));
-        questionSearch(stackOverflowApiManager.doSearchForTitle(SEARCH_ARGUMENTS.get(1)));
-        questionSearch(stackOverflowApiManager.doSearchForTitle(SEARCH_ARGUMENTS.get(2)));
-        questionSearch(stackOverflowApiManager.doSearchForTitle(SEARCH_ARGUMENTS.get(3)));
+        questionSearch(stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(0), ""));
+        questionSearch(stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(1), ""));
+        questionSearch(stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(2), ""));
+        questionSearch(stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(3), ""));
     }
 
     private void checkResults() {
@@ -118,6 +119,9 @@ public class SearchFragment extends Fragment {
             mSearchButton.setEnabled(true);
 
             if (mListener != null) {
+                double performSearchTime = (System.currentTimeMillis() - startTime) / 1000;
+                logger.getInstance().error("Timing in performSearch(): ", String.valueOf(performSearchTime));
+
                 Fragment fragment_to_open = QuestionsFragment.newInstance(gson.toJson(mResults));
                 mListener.onRequestOpenFragment(fragment_to_open, "opening results");
             }

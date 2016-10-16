@@ -1,12 +1,12 @@
-package com.alterego.stackoverflow.norx.test.di;
+package com.alterego.stackoverflow.test.di;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import com.alterego.advancedandroidlogger.implementations.DetailedAndroidLogger;
 import com.alterego.advancedandroidlogger.interfaces.IAndroidLogger;
-import com.alterego.stackoverflow.norx.test.Logger;
-import com.alterego.stackoverflow.norx.test.helpers.DateTimeSerializer;
+import com.alterego.stackoverflow.test.Logger;
+import com.alterego.stackoverflow.test.helpers.DateTimeSerializer;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
@@ -21,16 +21,15 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import solutions.alterego.stackoverflow.norx.test.R;
 
 @Module
-public class AndroidModule {
+public class AndroidTestProvidersModule {
 
     private final Application application;
 
     private static final String LOGGING_TAG = "StackOverflowTest";
 
-    public AndroidModule(Application application) {
+    public AndroidTestProvidersModule(Application application) {
         this.application = application;
     }
 
@@ -60,10 +59,4 @@ public class AndroidModule {
         return new GsonBuilder().registerTypeAdapter(DateTime.class, dateSerializer).create();
     }
 
-    @Provides
-    @Singleton
-    @Named("api_baseurl")
-    String provideApiBaseurl(Context context) {
-        return context.getResources().getString(R.string.server);
-    }
 }

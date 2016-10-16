@@ -14,11 +14,12 @@ import javax.inject.Singleton;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
-import rx.schedulers.Schedulers;
+import rx.Scheduler;
 
 @Singleton
 public class StackOverflowApiManager {
@@ -30,20 +31,25 @@ public class StackOverflowApiManager {
     private final IStackOverflowApi service;
 
     @Inject
-    public StackOverflowApiManager(Gson gson, @Named("cacheDir") File cacheDir, @Named("api_baseurl") String baseUrl) {
+    public StackOverflowApiManager(Gson gson, @Named("cacheDir") File cacheDir, @Named("api_baseurl") String baseUrl, Scheduler scheduler) {
 
         Retrofit restAdapter = new Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl(baseUrl)
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-            .client(getOkHttpClient(cacheDir))
-            .build();
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(baseUrl)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(scheduler))
+                .client(getOkHttpClient(cacheDir))
+                .build();
 
         service = restAdapter.create(IStackOverflowApi.class);
     }
 
-    public Observable<SearchResponse> doSearchForTitleAndTags(String title, String commaDelimitedTags) {
-        return service.getSearchResults(title, commaDelimitedTags);
+    public Call<SearchResponse> doSearchForTitleAndTagsNormal(String title, String commaDelimitedTags) {
+        Call<SearchResponse> sr = service.getSearchResultsNormal(title, commaDelimitedTags);
+        return sr;
+    }
+
+    public Observable<SearchResponse> doSearchForTitleReactive(String title, String commaDelimitedTags) {
+        return service.getSearchResultsReactive(title, commaDelimitedTags);
     }
 
     private OkHttpClient getOkHttpClient(File baseDir) {
