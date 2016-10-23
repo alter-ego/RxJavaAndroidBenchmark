@@ -3,6 +3,7 @@ package com.alterego.stackoverflow.test.api;
 import com.google.gson.Gson;
 
 import com.alterego.stackoverflow.test.data.SearchResponse;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -31,12 +32,13 @@ public class StackOverflowApiManager {
     private final IStackOverflowApi service;
 
     @Inject
-    public StackOverflowApiManager(Gson gson, @Named("cacheDir") File cacheDir, @Named("api_baseurl") String baseUrl, Scheduler scheduler) {
+    public StackOverflowApiManager(Gson gson, @Named("cacheDir") File cacheDir, @Named("api_baseurl") String baseUrl, Scheduler schedulerRx, io.reactivex.Scheduler schedulerRx2) {
 
         Retrofit restAdapter = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(baseUrl)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(scheduler))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(schedulerRx))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(schedulerRx2))
                 .client(getOkHttpClient(cacheDir))
                 .build();
 
@@ -50,6 +52,10 @@ public class StackOverflowApiManager {
 
     public Observable<SearchResponse> doSearchForTitleReactive(String title, String commaDelimitedTags) {
         return service.getSearchResultsReactive(title, commaDelimitedTags);
+    }
+
+    public io.reactivex.Observable<SearchResponse> doSearchForTitleAndTagsReactive2(String title, String commaDelimitedTags) {
+        return service.getSearchResults(title, commaDelimitedTags);
     }
 
     private OkHttpClient getOkHttpClient(File baseDir) {
