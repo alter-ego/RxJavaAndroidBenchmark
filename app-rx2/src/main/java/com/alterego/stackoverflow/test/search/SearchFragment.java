@@ -27,12 +27,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func4;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function4;
+import io.reactivex.schedulers.Schedulers;
 import solutions.alterego.stackoverflow.test.R;
 
 
@@ -44,7 +44,7 @@ public class SearchFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private Subscription searchSubscription;
+    private Disposable searchSubscription;
 
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
@@ -94,20 +94,20 @@ public class SearchFragment extends Fragment {
         mSearchButton.setEnabled(false);
         mNoResultsText.setVisibility(View.INVISIBLE);
 
-        if (searchSubscription != null && !searchSubscription.isUnsubscribed()) {
-            searchSubscription.unsubscribe();
+        if (searchSubscription != null && !searchSubscription.isDisposed()) {
+            searchSubscription.dispose();
         }
 
         final long startMillis = System.currentTimeMillis();
 
-        searchSubscription = Observable.zip(
+        Observable.zip(
                 stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(0), ""),
                 stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(1), ""),
                 stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(2), ""),
                 stackOverflowApiManager.doSearchForTitleAndTags(SEARCH_ARGUMENTS.get(3), ""),
-                new Func4<SearchResponse, SearchResponse, SearchResponse, SearchResponse, List<Question>>() {
+                new Function4<SearchResponse, SearchResponse, SearchResponse, SearchResponse, List<Question>>() {
                     @Override
-                    public List<Question> call(SearchResponse searchResponse,
+                    public List<Question> apply(SearchResponse searchResponse,
                             SearchResponse searchResponse2,
                             SearchResponse searchResponse3,
                             SearchResponse searchResponse4) {
@@ -151,7 +151,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        searchSubscription.unsubscribe();
+        searchSubscription.dispose();
     }
 
     @Override
@@ -162,7 +162,7 @@ public class SearchFragment extends Fragment {
 
     private Observer<List<Question>> questionSearchObserver = new Observer<List<Question>>() {
         @Override
-        public void onCompleted() {
+        public void onComplete() {
             logger.getInstance().info("SearchFragment questionSearchObserver finished with search");
         }
 
@@ -173,6 +173,11 @@ public class SearchFragment extends Fragment {
             mNoResultsText.setVisibility(View.VISIBLE);
             mNoResultsText.setText(getString(R.string.search_error));
             mSearchButton.setEnabled(true);
+        }
+
+        @Override
+        public void onSubscribe(Disposable d) {
+            searchSubscription = d;
         }
 
         @Override

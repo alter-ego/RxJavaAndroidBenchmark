@@ -3,6 +3,7 @@ package com.alterego.stackoverflow.test.api;
 import com.google.gson.Gson;
 
 import com.alterego.stackoverflow.test.data.SearchResponse;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -11,14 +12,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.schedulers.Schedulers;
 
 @Singleton
 public class StackOverflowApiManager {
@@ -35,7 +35,7 @@ public class StackOverflowApiManager {
         Retrofit restAdapter = new Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl(baseUrl)
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .client(getOkHttpClient(cacheDir))
             .build();
 

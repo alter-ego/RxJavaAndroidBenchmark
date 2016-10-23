@@ -2,9 +2,9 @@ package com.alterego.stackoverflow.test.api;
 
 import com.alterego.stackoverflow.test.data.SearchResponse;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import rx.Observable;
 
 /**
  * This is the API for StackOverflow.
