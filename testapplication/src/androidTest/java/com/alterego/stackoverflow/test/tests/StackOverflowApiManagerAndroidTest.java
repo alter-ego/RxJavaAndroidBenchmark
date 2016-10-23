@@ -24,6 +24,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import javax.inject.Inject;
 
+import io.reactivex.observers.TestObserver;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import retrofit2.Call;
@@ -50,7 +51,9 @@ public class StackOverflowApiManagerAndroidTest {
 
     private MockWebServer server;
 
-    final TestScheduler testScheduler = new TestScheduler();
+    final TestScheduler testSchedulerRx = new TestScheduler();
+
+    final io.reactivex.schedulers.TestScheduler testSchedulerRx2 = new io.reactivex.schedulers.TestScheduler();
 
     @Before
     public void setUp() throws Exception {
@@ -58,7 +61,7 @@ public class StackOverflowApiManagerAndroidTest {
         server = new MockWebServer();
         server.start();
         String serverBaseUrl = server.url("/").toString();
-        mStackOverflowApiManager = new StackOverflowApiManager(gson, null, serverBaseUrl, testScheduler);
+        mStackOverflowApiManager = new StackOverflowApiManager(gson, null, serverBaseUrl, testSchedulerRx, testSchedulerRx2);
     }
 
     @After
@@ -70,7 +73,13 @@ public class StackOverflowApiManagerAndroidTest {
 
         }
         try {
-            Benchit.analyze("simple-search-result-call-reactive").log();
+            Benchit.analyze("simple-search-result-call-rx").log();
+        } catch (Exception e) {
+
+        }
+
+        try {
+            Benchit.analyze("simple-search-result-call-rx2").log();
         } catch (Exception e) {
 
         }
@@ -94,19 +103,36 @@ public class StackOverflowApiManagerAndroidTest {
 
     @Test
     @Repeat(times = 100)
-    public void apiservice_gets_mocked_search_result_reactive() throws Exception {
+    public void apiservice_gets_mocked_search_result_rx() throws Exception {
         MockResponse successfulCachedSettingsMockResponse = RawJsonMockResponse.fromString(StackOverflowApiResponses.SEARCH_RAW_RESPONSE);
         server.enqueue(successfulCachedSettingsMockResponse);
 
-        Benchit.begin("simple-search-result-call-reactive");
+        Benchit.begin("simple-search-result-call-rx");
         TestSubscriber testSubscriber = TestSubscriber.create();
         mStackOverflowApiManager.doSearchForTitleReactive("", "").subscribe(testSubscriber);
-        testScheduler.triggerActions();
-        Benchit.end("simple-search-result-call-reactive");
+        testSchedulerRx.triggerActions();
+        Benchit.end("simple-search-result-call-rx");
 
         Assertions.assertThat(server.getRequestCount()).isEqualTo(1);
         testSubscriber.assertValueCount(1);
         testSubscriber.assertCompleted();
+        testSubscriber.assertNoErrors();
+    }
+
+    @Test
+    @Repeat(times = 100)
+    public void apiservice_gets_mocked_search_result_rx2() throws Exception {
+        MockResponse successfulCachedSettingsMockResponse = RawJsonMockResponse.fromString(StackOverflowApiResponses.SEARCH_RAW_RESPONSE);
+        server.enqueue(successfulCachedSettingsMockResponse);
+
+        Benchit.begin("simple-search-result-call-rx2");
+        TestObserver<SearchResponse> testSubscriber = mStackOverflowApiManager.doSearchForTitleAndTagsReactive2("", "").test();
+        testSchedulerRx2.triggerActions();
+        Benchit.end("simple-search-result-call-rx2");
+
+        Assertions.assertThat(server.getRequestCount()).isEqualTo(1);
+        testSubscriber.assertValueCount(1);
+        testSubscriber.assertComplete();
         testSubscriber.assertNoErrors();
     }
 

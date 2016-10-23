@@ -23,4 +23,7 @@ public interface IStackOverflowApi {
 
     @GET("search?order=desc&sort=activity&site=stackoverflow")
     Observable<SearchResponse> getSearchResultsReactive(@Query("intitle") String titleSearchTerms, @Query("tagged") String stringDelimitedTags);
+
+    @GET("search?order=desc&sort=activity&site=stackoverflow&filter=!3yXvh9)gd0IKKXn31")
+    io.reactivex.Observable<SearchResponse> getSearchResults(@Query("intitle") String titleSearchTerms, @Query("tagged") String stringDelimitedTags);
 }

@@ -12,15 +12,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.Scheduler;
 
 @Singleton
 public class StackOverflowApiManager {
@@ -32,29 +30,19 @@ public class StackOverflowApiManager {
     private final IStackOverflowApi service;
 
     @Inject
-    public StackOverflowApiManager(Gson gson, @Named("cacheDir") File cacheDir, @Named("api_baseurl") String baseUrl, Scheduler schedulerRx, io.reactivex.Scheduler schedulerRx2) {
+    public StackOverflowApiManager(Gson gson, @Named("cacheDir") File cacheDir, @Named("api_baseurl") String baseUrl) {
 
         Retrofit restAdapter = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl(baseUrl)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(schedulerRx))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(schedulerRx2))
-                .client(getOkHttpClient(cacheDir))
-                .build();
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl(baseUrl)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+            .client(getOkHttpClient(cacheDir))
+            .build();
 
         service = restAdapter.create(IStackOverflowApi.class);
     }
 
-    public Call<SearchResponse> doSearchForTitleAndTagsNormal(String title, String commaDelimitedTags) {
-        Call<SearchResponse> sr = service.getSearchResultsNormal(title, commaDelimitedTags);
-        return sr;
-    }
-
-    public Observable<SearchResponse> doSearchForTitleReactive(String title, String commaDelimitedTags) {
-        return service.getSearchResultsReactive(title, commaDelimitedTags);
-    }
-
-    public io.reactivex.Observable<SearchResponse> doSearchForTitleAndTagsReactive2(String title, String commaDelimitedTags) {
+    public Observable<SearchResponse> doSearchForTitleAndTags(String title, String commaDelimitedTags) {
         return service.getSearchResults(title, commaDelimitedTags);
     }
 

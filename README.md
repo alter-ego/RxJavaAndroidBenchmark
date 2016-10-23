@@ -1,26 +1,55 @@
 #RXJavaAndroidBenchmark
 
-This is a simple test program based on another project that use StackOverflow Api, written for Android. It's compiled against API 21 (5.0) but supports all Android versions from API 14 (4.0) onwards. It also uses v21 support libraries. It is made to compile against Android Studio RC2 with gradle plugin 0.14.
+This is a simple benchmarking Android app that uses StackOverflow to open fixed search terms pages, with detailed pages with comments. It's compiled against API 23 but supports all Android versions from API 19. It also uses v23 support libraries.
 
-The purpose of the project is to evidence the performance difference between RX Programming software and non-RX Programming software.
+The purpose of the app is to check the differences in app size and speed between normal Android app, app using rxjava and rxjava2. **That is the only differences between the app modules.** They all use the same libraries otherwise. For data loading we have used Retrofit which supports reactive call adapters so they can be easily switched/removed.
 
-For the purpose the program have two version inside:
+All apps use normal Android activities and fragments. When opening the app the search button is shown that, when pressed, performs 4 parallel searches for tags (`android`, `rxjava`, `countdownlatch`, `multithreading`) performed on StackOverflow API, and then opens a fragment with results, shown in a `ListView`. Clicking on a particular search result, you can open the question with answers and comments.
 
-The first app uses reactive programming techniques that enable event-driven programming, and rx-java with rx-android library enables us to select particular threads we want it to run on (for example, subscribing to DAO results is on Schedulers.io() thread, while observing and UI updating is on AndroidSchedulers.mainThread()) so as to avoid UI blocking.
+This repo has 4 modules:
 
-The second, app-norx avoid to use reactive programming techniques.
+- `app-norx`: normal Android app
+- `app`: app using rx-java 1.1.6
+- `app-rx2`: app using rx-java 2.0.0-RC5
+- `testapplication`: test that uses previously saved results file in JSON formats and offers it to networking calls through Retrofit's `MockWebServer`.
 
-From the Android UI perspective, it uses Navigation Drawer to easily navigate through the app, single Activity for the context and Fragments for particular views. There's also a SettingsManager that serves as a global context beyond Application context. The app supports both smartphones and tablets, portrait and landscape.
+With these modules the idea was to be able to test the normal RAM and CPU consumption starting the three normal apps on a device, but also to see if the parallel searches are quicker using rx-java libraries; and on the other hand to see if the Retrofit library itself influences the results in some way (by excluding internet communication).
+ 
+We are using a single Activity for the context and Fragments for particular views. There's also a SettingsManager that serves as a global context beyond Application context. We have also added the basic Navigation Drawer and image loading to emulate the normal app as much as possible.
 
-## FEATURES
+## TESTING PROCEDURE USED
 
-The app for the moment enables you to search the questions on Stack Overflow website, and loads the comments and answers for the questions. It's just to show how the API works and how it could be implemented with rx-java.
+When testing the app modules, the testing procedure was the following:
+
+### RAM, CPU usage testing
+
+	1. install apk obtained through `assembleDebug` for {app, app-norx, app-rx2} modules     
+	2. open the app
+    3. press search button
+    4. for n = 1, 10 {
+    	open details for item `n`;
+    	return to results
+    }
+
+During these operations, we would write down maximum CPU usage; RAM usage would be measured at the end, with the app still opened on the search results (after step 4).
+
+### Retrofit library loading testing
+
+We executed the `StackOverflowApiManagerAndroidTest` in `testapplication` module and checked for `Benchit` tag in android logs, that printed the call timings (tags `simple-search-result-call-normal`, `simple-search-result-call-rx`, `simple-search-result-call-rx2`). 
+
+### Further app results
+
+We have also uploaded the APKs to Nimble Droid to check the number of methods, APK size, page loading times and memory leaks. You can find them here:
+
+- no-rx: [https://nimbledroid.com/my_apps/solutions.alterego.stackoverflow.norx.test](https://nimbledroid.com/my_apps/solutions.alterego.stackoverflow.norx.test)
+- rx: [https://nimbledroid.com/my_apps/solutions.alterego.stackoverflow.test](https://nimbledroid.com/my_apps/solutions.alterego.stackoverflow.test)
+- rx2: [https://nimbledroid.com/my_apps/solutions.alterego.stackoverflow.rx2.test](https://nimbledroid.com/my_apps/solutions.alterego.stackoverflow.rx2.test)
 
 ## DEPENDENCIES
 
 - AdvancedAndroidLogger - for advanced logging to logcat
 - Lombok - for generating getters, setters, tostring etc.
-- Rx-Java (core, Android) - for event-driven programming
+- Rx-Java (core, Android) - for reactive programming
 - Retrofit with OkHttp - for REST calls with rx support
 - Universal image loader - for cached image loading 
 - Gson - for JSON <-> POJO conversions
@@ -29,4 +58,4 @@ The app for the moment enables you to search the questions on Stack Overflow web
 
 ## LICENSE
 
-This app cannot be used for any purposes except for learning how to use RX Java and StackOverflow REST API.
+This app cannot be used for any purposes except for testing rx-java libraries and StackOverflow API.
