@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">StackOverflowApiTest</string>
+    <string name="app_name">Rx1 Benchmark</string>
     <string name="title_section1">Search</string>
     <string name="title_section2">Saved items</string>
     <string name="title_section3">Saved Searches</string>
